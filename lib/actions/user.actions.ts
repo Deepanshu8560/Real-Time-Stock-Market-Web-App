@@ -1,25 +1,27 @@
 'use server';
 
-import {connectToDatabase} from "@/database/mongoose";
+import { getDb } from "@/database/postgres";
+import { sql } from 'drizzle-orm';
 
 export const getAllUsersForNewsEmail = async () => {
     try {
-        const mongoose = await connectToDatabase();
-        const db = mongoose.connection.db;
-        if(!db) throw new Error('Mongoose connection not connected');
+        const db = await getDb();
 
-        const users = await db.collection('user').find(
-            { email: { $exists: true, $ne: null }},
-            { projection: { _id: 1, id: 1, email: 1, name: 1, country:1 }}
-        ).toArray();
+        // Query users from better-auth's user table
+        // Better-auth uses a 'user' table in PostgreSQL
+        const users = await db.execute(sql`
+            SELECT id, email, name 
+            FROM "user" 
+            WHERE email IS NOT NULL AND name IS NOT NULL
+        `);
 
-        return users.filter((user) => user.email && user.name).map((user) => ({
-            id: user.id || user._id?.toString() || '',
+        return users.rows.map((user: any) => ({
+            id: user.id || '',
             email: user.email,
             name: user.name
-        }))
+        }));
     } catch (e) {
-        console.error('Error fetching users for news email:', e)
-        return []
+        console.error('Error fetching users for news email:', e);
+        return [];
     }
 }

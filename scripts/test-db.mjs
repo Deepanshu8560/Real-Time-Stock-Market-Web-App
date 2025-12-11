@@ -1,28 +1,31 @@
 import 'dotenv/config';
-import mongoose from 'mongoose';
+import { neon } from '@neondatabase/serverless';
 
 async function main() {
-  const uri = process.env.MONGODB_URI;
+  const uri = process.env.DATABASE_URL;
   if (!uri) {
-    console.error('ERROR: MONGODB_URI must be set in .env');
+    console.error('ERROR: DATABASE_URL must be set in .env');
     process.exit(1);
   }
 
   try {
     const startedAt = Date.now();
-    await mongoose.connect(uri, { bufferCommands: false });
+    const sql = neon(uri);
+    
+    // Test the connection
+    const result = await sql`SELECT version(), current_database() as db_name, current_user as user_name`;
     const elapsed = Date.now() - startedAt;
 
-    const dbName = mongoose.connection?.name || '(unknown)';
-    const host = mongoose.connection?.host || '(unknown)';
+    const dbName = result[0]?.db_name || '(unknown)';
+    const version = result[0]?.version || '(unknown)';
+    const userName = result[0]?.user_name || '(unknown)';
 
-    console.log(`OK: Connected to MongoDB [db="${dbName}", host="${host}", time=${elapsed}ms]`);
-    await mongoose.connection.close();
+    console.log(`OK: Connected to PostgreSQL [db="${dbName}", user="${userName}", time=${elapsed}ms]`);
+    console.log(`   Version: ${version}`);
     process.exit(0);
   } catch (err) {
     console.error('ERROR: Database connection failed');
     console.error(err);
-    try { await mongoose.connection.close(); } catch {}
     process.exit(1);
   }
 }

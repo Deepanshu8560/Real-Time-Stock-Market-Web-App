@@ -11,7 +11,8 @@
 <img src="https://img.shields.io/badge/-Shadcn-black?style=for-the-badge&logoColor=white&logo=shadcnui&color=black"/>
 <img src="https://img.shields.io/badge/-Inngest-black?style=for-the-badge&logoColor=white&logo=inngest&color=black"/><br/>
 
-<img src="https://img.shields.io/badge/-MongoDB-black?style=for-the-badge&logoColor=white&logo=mongodb&color=00A35C"/>
+<img src="https://img.shields.io/badge/-PostgreSQL-black?style=for-the-badge&logoColor=white&logo=postgresql&color=336791"/>
+<img src="https://img.shields.io/badge/-Neon-black?style=for-the-badge&logoColor=white&logo=neon&color=00E5FF"/>
 <img src="https://img.shields.io/badge/-CodeRabbit-black?style=for-the-badge&logoColor=white&logo=coderabbit&color=9146FF"/>
 <img src="https://img.shields.io/badge/-TailwindCSS-black?style=for-the-badge&logoColor=white&logo=tailwindcss&color=38B2AC"/>
 <img src="https://img.shields.io/badge/-TypeScript-black?style=for-the-badge&logoColor=white&logo=typescript&color=3178C6"/>
@@ -61,7 +62,9 @@ If you're getting started and need assistance or face any bugs, join our active 
 
 - **[Inngest](https://jsm.dev/stocks-inngest)** is a platform for event-driven workflows and background jobs. It allows developers to build reliable, scalable automated processes such as real-time alerts, notifications, and AI-powered workflows.
 
-- **[MongoDB](https://www.mongodb.com/)** is a flexible, high-performance NoSQL database. It stores data in JSON-like documents, supports dynamic schemas, and provides robust features for scalability, replication, and querying.
+- **[PostgreSQL](https://www.postgresql.org/)** is a powerful, open-source relational database system known for its reliability, feature robustness, and performance. It supports both SQL (relational) and JSON (non-relational) querying.
+
+- **[Neon](https://neon.tech/)** is a serverless PostgreSQL platform that separates storage and compute, offering instant branching, autoscaling, and a generous free tier. It's perfect for modern applications that need a fully managed PostgreSQL database.
 
 - **[Nodemailer](https://nodemailer.com/)** is a Node.js library for sending emails easily. It supports various transport methods such as SMTP, OAuth2, and third-party services, making it a reliable tool for handling transactional emails, notifications, and contact forms in applications.
 
@@ -132,8 +135,10 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000
 NEXT_PUBLIC_NEXT_PUBLIC_FINNHUB_API_KEY=
 FINNHUB_BASE_URL=https://finnhub.io/api/v1
 
-# MONGODB
-MONGODB_URI=
+# DATABASE (PostgreSQL with Neon)
+# Get your connection string from: https://console.neon.tech/
+# Format: postgresql://user:password@ep-xxx.region.aws.neon.tech/dbname?sslmode=require
+DATABASE_URL=
 
 # BETTER AUTH
 BETTER_AUTH_SECRET=
@@ -142,12 +147,20 @@ BETTER_AUTH_URL=http://localhost:3000
 # GEMINI
 GEMINI_API_KEY=
 
-#NODEMAILER
+# NODEMAILER
 NODEMAILER_EMAIL=
 NODEMAILER_PASSWORD=
 ```
 
-Replace the placeholder values with your real credentials. You can get these by signing up at: [**MongoDB**](https://www.mongodb.com/products/platform/atlas-database), [**Gemini**](https://aistudio.google.com/prompts/new_chat?utm_source=chatgpt.com), [**Inngest**](https://jsm.dev/stocks-inggest), [**Finnhub**](https://finnhub.io).
+Replace the placeholder values with your real credentials. You can get these by signing up at: [**Neon**](https://neon.tech/) (for PostgreSQL database), [**Gemini**](https://aistudio.google.com/prompts/new_chat?utm_source=chatgpt.com), [**Inngest**](https://jsm.dev/stocks-inggest), [**Finnhub**](https://finnhub.io).
+
+**Set Up Database Schema**
+
+After setting up your Neon database and adding the `DATABASE_URL` to your `.env` file, run the migration to create the necessary tables:
+
+```bash
+npm run migrate
+```
 
 **Running the Project**
 
